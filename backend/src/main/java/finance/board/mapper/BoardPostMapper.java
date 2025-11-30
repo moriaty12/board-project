@@ -11,4 +11,8 @@ public interface  BoardPostMapper {
     BoardPost findById(Long id);
 
     void insert(BoardPost post);
+
+    void update(BoardPost post);
+
+    void delete(Long id);
 }

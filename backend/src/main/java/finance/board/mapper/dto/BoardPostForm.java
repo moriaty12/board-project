@@ -1,4 +1,4 @@
-package finance.board.dto;
+package finance.board.mapper.dto;
 
 public class BoardPostForm {
 

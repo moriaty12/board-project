@@ -1,7 +1,7 @@
 package finance.board.controller;
 
 import finance.board.domain.BoardPost;
-import finance.board.dto.BoardPostForm;
+import finance.board.mapper.dto.BoardPostForm;
 import finance.board.mapper.BoardPostMapper;
 import org.springframework.web.bind.annotation.*;
 

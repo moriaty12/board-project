@@ -48,4 +48,21 @@
         (#{title}, #{content}, #{writer}, NOW())
     </insert>
 
+    <!-- 글 수정 -->
+    <update id="update"
+            parameterType="finance.board.domain.BoardPost">
+        UPDATE board_post
+        SET
+        title   = #{title},
+        content = #{content},
+        writer  = #{writer}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 글 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM board_post
+        WHERE id = #{id}
+    </delete>
+
 </mapper>
