@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="finance.board.mapper.FundMasterMapper">
+
+
+    <insert id="insertFundMaster"
+            parameterType="finance.board.domain.FundMaster">
+
+        INSERT INTO FUND_MST
+        (
+        FUND_CD,
+        FUND_NM,
+        FUND_TP_CD,
+        MNG_CO_CD,
+        RISK_GRD_CD,
+        LIST_DT,
+        CUR_CD,
+        DATA_CRT_USR_ID,
+        DATA_CHG_USR_ID,
+        LAST_SRC_NM
+        )
+        VALUES
+        (
+        #{fundCd},
+        #{fundNm},
+        #{fundTpCd},
+        #{mngCoCd},
+        #{riskGrdCd},
+        #{listDt},
+        #{curCd},
+        'BATCH',
+        'BATCH',
+        #{lastSrcNm}
+        )
+
+        ON DUPLICATE KEY UPDATE
+        FUND_NM = VALUES(FUND_NM),
+        RISK_GRD_CD = VALUES(RISK_GRD_CD),
+        DATA_CHG_USR_ID='BATCH'
+
+    </insert>
+
+
+    <select id="selectAll"
+            resultType="finance.board.domain.FundMaster">
+
+        SELECT
+        FUND_CD fundCd,
+        FUND_NM fundNm,
+        FUND_TP_CD fundTpCd,
+        MNG_CO_CD mngCoCd,
+        RISK_GRD_CD riskGrdCd,
+        LIST_DT listDt,
+        CUR_CD curCd,
+        LAST_SRC_NM lastSrcNm
+        FROM FUND_MST
+
+    </select>
+
+
+</mapper>
