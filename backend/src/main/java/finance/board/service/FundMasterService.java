@@ -28,13 +28,13 @@ public class FundMasterService {
                 krxApiClient.getEtfDailyTrade(basDd);
 
         if(response == null ||
-                response.getOutBlock_1() == null) {
+                response.getOutBlock1() == null) {
             return 0;
         }
 
         int count = 0;
 
-        for(KrxEtfItem item : response.getOutBlock_1()) {
+        for(KrxEtfItem item : response.getOutBlock1()) {
 
             FundMaster fund = new FundMaster();
 
