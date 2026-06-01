@@ -34,13 +34,20 @@ public class FundMasterService {
 
         int count = 0;
 
-        for(KrxEtfItem item : response.getOutBlock1()) {
+        for (KrxEtfItem item : response.getOutBlock1()) {
+
+            if (item.getIsuCd() == null || item.getIsuCd().isBlank()) {
+                continue;
+            }
 
             FundMaster fund = new FundMaster();
 
-            fund.setFundCd(item.getISU_CD());
-            fund.setFundNm(item.getISU_NM());
+            fund.setFundCd(item.getIsuCd());
+            fund.setFundNm(item.getIsuNm());
             fund.setFundTpCd("ETF");
+            fund.setMngCoCd(null);
+            fund.setRiskGrdCd(null);
+            fund.setListDt(null);
             fund.setCurCd("KRW");
             fund.setLastSrcNm("KRX_API");
 
