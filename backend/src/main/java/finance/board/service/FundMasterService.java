@@ -1,12 +1,15 @@
 package finance.board.service;
 
 import finance.board.domain.FundMaster;
+import finance.board.domain.FundPerfHist;
 import finance.board.mapper.FundMasterMapper;
+import finance.board.mapper.FundPerfHistMapper;
 import finance.board.mapper.dto.KrxEtfItem;
 import finance.board.mapper.dto.KrxEtfResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
 public class FundMasterService {
 
     private final FundMasterMapper mapper;
+    private final FundPerfHistMapper fundPerfHistMapper;
     private final KrxApiClient krxApiClient;
 
     public int batchInsert(String basDd) {
@@ -27,8 +31,7 @@ public class FundMasterService {
         KrxEtfResponse response =
                 krxApiClient.getEtfDailyTrade(basDd);
 
-        if(response == null ||
-                response.getOutBlock1() == null) {
+        if (response == null || response.getOutBlock1() == null) {
             return 0;
         }
 
@@ -40,6 +43,7 @@ public class FundMasterService {
                 continue;
             }
 
+            // 1. FUND_MST 적재
             FundMaster fund = new FundMaster();
 
             fund.setFundCd(item.getIsuCd());
@@ -51,10 +55,28 @@ public class FundMasterService {
             fund.setCurCd("KRW");
             fund.setLastSrcNm("KRX_API");
 
-            count += mapper.insertFundMaster(fund);
+            mapper.insertFundMaster(fund);
+
+            // 2. FUND_PERF_HIST 적재
+            FundPerfHist hist = new FundPerfHist();
+
+            hist.setFundCd(item.getIsuCd());
+            hist.setBaseDt(LocalDate.parse(item.getBasDd(), DateTimeFormatter.BASIC_ISO_DATE));
+            hist.setClsPrc(toBigDecimal(item.getTddClsprc()));
+            hist.setNav(toBigDecimal(item.getNav()));
+
+            count += fundPerfHistMapper.mergeFundPerfHist(hist);
         }
 
         return count;
+    }
+
+    private BigDecimal toBigDecimal(String value) {
+        if (value == null || value.isBlank() || "-".equals(value)) {
+            return null;
+        }
+
+        return new BigDecimal(value.replace(",", ""));
     }
 
     public List<FundMaster> list() {

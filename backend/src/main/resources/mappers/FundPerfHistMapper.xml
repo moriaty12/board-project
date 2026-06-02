@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="finance.board.mapper.FundPerfHistMapper">
+
+    <insert id="mergeFundPerfHist" parameterType="finance.board.domain.FundPerfHist">
+
+        INSERT INTO FUND_PERF_HIST (
+        FUND_CD,
+        BASE_DT,
+        CLS_PRC,
+        NAV,
+        DATA_CRT_USR_ID,
+        DATA_CHG_USR_ID,
+        LAST_SRC_NM
+        )
+        VALUES (
+        #{fundCd},
+        #{baseDt},
+        #{clsPrc},
+        #{nav},
+        'BATCH',
+        'BATCH',
+        'KRX_OPEN_API'
+        )
+        ON DUPLICATE KEY UPDATE
+        CLS_PRC = VALUES(CLS_PRC),
+        NAV = VALUES(NAV),
+        DATA_CHG_USR_ID = 'BATCH',
+        LAST_SRC_NM = 'KRX_OPEN_API'
+
+    </insert>
+
+</mapper>
