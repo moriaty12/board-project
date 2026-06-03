@@ -33,4 +33,45 @@
 
     </insert>
 
+    <update id="updateReturnRateByRange">
+
+        UPDATE FUND_PERF_HIST A
+        LEFT JOIN FUND_PERF_HIST M1
+        ON A.FUND_CD = M1.FUND_CD
+        AND DATE_SUB(A.BASE_DT, INTERVAL 1 MONTH) = M1.BASE_DT
+        LEFT JOIN FUND_PERF_HIST M3
+        ON A.FUND_CD = M3.FUND_CD
+        AND DATE_SUB(A.BASE_DT, INTERVAL 3 MONTH) = M3.BASE_DT
+        LEFT JOIN FUND_PERF_HIST M6
+        ON A.FUND_CD = M6.FUND_CD
+        AND DATE_SUB(A.BASE_DT, INTERVAL 6 MONTH) = M6.BASE_DT
+        LEFT JOIN FUND_PERF_HIST M12
+        ON A.FUND_CD = M12.FUND_CD
+        AND DATE_SUB(A.BASE_DT, INTERVAL 12 MONTH) = M12.BASE_DT
+        SET
+        A.RTN_1M = CASE
+        WHEN A.NAV IS NOT NULL AND M1.NAV IS NOT NULL AND M1.NAV <> 0
+        THEN ROUND(((A.NAV / M1.NAV) - 1) * 100, 4)
+        ELSE A.RTN_1M
+        END,
+        A.RTN_3M = CASE
+        WHEN A.NAV IS NOT NULL AND M3.NAV IS NOT NULL AND M3.NAV <> 0
+        THEN ROUND(((A.NAV / M3.NAV) - 1) * 100, 4)
+        ELSE A.RTN_3M
+        END,
+        A.RTN_6M = CASE
+        WHEN A.NAV IS NOT NULL AND M6.NAV IS NOT NULL AND M6.NAV <> 0
+        THEN ROUND(((A.NAV / M6.NAV) - 1) * 100, 4)
+        ELSE A.RTN_6M
+        END,
+        A.RTN_12M = CASE
+        WHEN A.NAV IS NOT NULL AND M12.NAV IS NOT NULL AND M12.NAV <> 0
+        THEN ROUND(((A.NAV / M12.NAV) - 1) * 100, 4)
+        ELSE A.RTN_12M
+        END
+        WHERE A.BASE_DT BETWEEN STR_TO_DATE(#{fromDt}, '%Y%m%d')
+        AND STR_TO_DATE(#{toDt}, '%Y%m%d')
+
+    </update>
+
 </mapper>

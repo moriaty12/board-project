@@ -106,4 +106,8 @@ public class FundMasterService {
 
         return totalCnt;
     }
+
+    public int calcReturnRateByRange(String fromDt, String toDt) {
+        return fundPerfHistMapper.updateReturnRateByRange(fromDt, toDt);
+    }
 }

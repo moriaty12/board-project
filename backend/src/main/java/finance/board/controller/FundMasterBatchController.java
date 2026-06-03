@@ -45,4 +45,15 @@ public class FundMasterBatchController {
                 + ", 종료일=" + toDt
                 + ", 총 적재건수=" + cnt;
     }
+    @GetMapping("/calc-return")
+    public String calcReturn(
+            @RequestParam String fromDt,
+            @RequestParam String toDt) {
+
+        int cnt = service.calcReturnRateByRange(fromDt, toDt);
+
+        return "수익률 계산 완료, 시작일=" + fromDt
+                + ", 종료일=" + toDt
+                + ", 처리건수=" + cnt;
+    }
 }
