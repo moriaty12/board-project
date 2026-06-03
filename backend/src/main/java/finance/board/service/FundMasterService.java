@@ -82,4 +82,28 @@ public class FundMasterService {
     public List<FundMaster> list() {
         return mapper.selectAll();
     }
+
+    public int batchInsertRange(String fromDt, String toDt) {
+
+        LocalDate start = LocalDate.parse(fromDt, DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate end = LocalDate.parse(toDt, DateTimeFormatter.BASIC_ISO_DATE);
+
+        int totalCnt = 0;
+
+        while (!start.isAfter(end)) {
+
+            String basDd = start.format(DateTimeFormatter.BASIC_ISO_DATE);
+
+            try {
+                totalCnt += batchInsert(basDd);
+            } catch (Exception e) {
+                System.out.println("배치 실패 기준일 : " + basDd);
+                e.printStackTrace();
+            }
+
+            start = start.plusDays(1);
+        }
+
+        return totalCnt;
+    }
 }

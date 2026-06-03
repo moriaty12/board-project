@@ -33,4 +33,16 @@ public class FundMasterBatchController {
     public List<FundMaster> list() {
         return service.list();
     }
+
+    @GetMapping("/load-range")
+    public String loadRange(
+            @RequestParam String fromDt,
+            @RequestParam String toDt) {
+
+        int cnt = service.batchInsertRange(fromDt, toDt);
+
+        return "시작일=" + fromDt
+                + ", 종료일=" + toDt
+                + ", 총 적재건수=" + cnt;
+    }
 }
